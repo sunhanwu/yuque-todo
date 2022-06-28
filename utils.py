@@ -5,6 +5,7 @@
 import re
 from typing import List
 import argparse
+import json
 
 def parse_arguments():
     """
@@ -35,3 +36,37 @@ def parseTodos(body:str) -> List[dict]:
                "date": item[0]}
         result.append(tmp)
     return result
+
+def hashItem(hashBucket:dict, hash:int, todo:dict, date: str):
+    """
+
+    :param date:
+    :param item:
+    :return:
+    """
+    if hash in hashBucket.keys():
+        return True, hashBucket
+    else:
+        hashBucket[hash] = (date, todo)
+        saveHashBucket(hashBucket)
+        return False, hashBucket
+
+def loadHashBucket():
+    """
+
+    :return:
+    """
+    with open('./hash.json', 'r', encoding='UTF-8') as f:
+        hashBucket = json.load(f)
+    return hashBucket
+
+def saveHashBucket(hashBucket:dict):
+    """
+
+    :return:
+    """
+    with open('./hash.json', 'w') as fp:
+        json.dump(hashBucket, fp)
+
+
+
