@@ -6,6 +6,7 @@ import re
 from typing import List
 import argparse
 import json
+import hashlib
 
 def parse_arguments():
     """
@@ -37,7 +38,7 @@ def parseTodos(body:str) -> List[dict]:
         result.append(tmp)
     return result
 
-def hashItem(hashBucket:dict, hash:int, todo:dict, date: str):
+def hashItem(hashBucket:dict, hash:str, todo:dict, date: str):
     """
 
     :param date:
@@ -68,5 +69,15 @@ def saveHashBucket(hashBucket:dict):
     with open('./hash.json', 'w') as fp:
         json.dump(hashBucket, fp)
 
+
+def md5hash(s:str)->str:
+    """
+
+    :param s:
+    :return:
+    """
+    md5 = hashlib.md5()
+    md5.update(s.encode("utf8"))
+    return md5.hexdigest()
 
 

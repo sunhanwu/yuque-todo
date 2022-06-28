@@ -1,5 +1,5 @@
 from flask import Flask, request, g
-from utils import parseTodos, parse_arguments, loadHashBucket, hashItem
+from utils import parseTodos, parse_arguments, loadHashBucket, hashItem, md5hash
 from mail import sendMail
 
 app = Flask(__name__)
@@ -14,7 +14,7 @@ def getTodo():
     global args
     global hashBucket
     for todo in todos:
-        itemHash = hash(update_date + todo['date'] + todo['msg'])
+        itemHash = md5hash(update_date + todo['date'] + todo['msg'])
         isHash, hashBucket = hashItem(hashBucket, itemHash, todo, update_date)
         if isHash:
             continue
