@@ -98,10 +98,10 @@ python app.py --fromAddr=xxx@qq.com --password=xxx --didaAddr=xxx
 
 + bugs fix
 + [x] 待办事项重复添加
-
 + function
-
 + [ ] webhook接口无认证机制
-+ [ ] 完善log输出
++ [x] 完善log输出
 + futrue
++ [ ] 支持更加灵活的待办事项语法
++ [ ] 支持统计汇总功能
 + [ ] 支持语雀文档自动同步到Github Pages作为个人博客

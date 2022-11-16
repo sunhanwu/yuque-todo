@@ -1,12 +1,9 @@
-"""
-
-"""
-
 import re
 from typing import List
 import argparse
 import json
 import hashlib
+import logging
 
 def parse_arguments():
     """
@@ -52,19 +49,22 @@ def hashItem(hashBucket:dict, hash:str, todo:dict, date: str):
         saveHashBucket(hashBucket)
         return False, hashBucket
 
-def loadHashBucket():
+def loadHashBucket() -> dict:
     """
-
-    :return:
+    load hash bucket dict from hash.json
+    :return: hash bucket dict
     """
     with open('./hash.json', 'r', encoding='UTF-8') as f:
         hashBucket = json.load(f)
-    return hashBucket
+    if hashBucket:
+        return hashBucket
+    else:
+        return {}
 
 def saveHashBucket(hashBucket:dict):
     """
-
-    :return:
+    save hash bucket into hash.json file
+    :return: None
     """
     with open('./hash.json', 'w') as fp:
         json.dump(hashBucket, fp)
@@ -72,9 +72,9 @@ def saveHashBucket(hashBucket:dict):
 
 def md5hash(s:str)->str:
     """
-
-    :param s:
-    :return:
+    string to md5 digest
+    :param s: string
+    :return: md5 digest
     """
     md5 = hashlib.md5()
     md5.update(s.encode("utf8"))

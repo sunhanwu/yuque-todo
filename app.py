@@ -4,7 +4,6 @@ from mail import sendMail
 
 app = Flask(__name__)
 
-
 @app.route('/', methods=['POST'])
 def getTodo():
     data = request.get_json()

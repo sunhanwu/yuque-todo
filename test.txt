@@ -1,0 +1,237 @@
+- 6月5日工作计划
+- [x] 下午：sjr课程完成
+- [x] 下午：完成3-5道leetcode题，继续二分法未完成
+- [x] 晚上：调研现有的工作未完成
+
+总结：基本一天没有怎么学习。除了下午学习了一点vue和nodejs的知识外，没有学太多的东西。调研工作没有开展，另外leetcode题并没有开始刷。从明天开始要认真学习。另外，多多少少需要继续完成apphub的编写，keep learning
+
+- 6月6日工作计划
+- [x] 下午：搭建登录页面完成
+- [x] ~~晚上：刷题~~未完成
+- [x] ~~晚上：科研工作~~未完成
+- 6月9日工作计划
+- [x] 下午：开始准备大规模评估对抗样本
+- [x] 调研数据集
+- [x] 调研特征集，特征提取器
+         - CIC-Flowmeter
+- [x] 调研目标模型
+- [x] 调研攻击方法
+- [x] 晚上：继续下午的工作，另外刷题别忘了
+
+---
+
+- 6月21日工作计划
+- [x] 上午: 刷题(5-10道题)完成
+      - 3无重复字符的最长子串：滑动串口方法华为medium
+      - 739[每日温度](https://leetcode-cn.com/problems/daily-temperatures)： 华为medium
+         - 暴力破解：使用两个循环往后搜索第一个超过当前温度的日期，算法复杂度为![](https://cdn.nlark.com/yuque/__latex/b67c3aca1bcc34aec861fef4fbf09535.svg#card=math&code=n%5E2&id=yZhEh) 超时
+         - 单调栈：单调栈在普通栈的基础上，限制栈内元素必须有序，按照某种特性(元素的值或者其他属性)单调递增或者单调递减。那么这个题就可以使用单调栈来解决。从前往后遍历每个温度，如果栈不为空并且当前文档大于栈顶那天的温度，说明找到了第一个大于栈顶温度的那边。那么栈顶那天的升温天数为遍历index减去栈顶索引。这个步骤一直进行下去到栈为空，再把当前天压入栈。如果当前温度小于或等于栈顶温度，那么直接压入栈。所以这个里面单调栈中存储的是还没有找到升温天数的索引。AC
+      - 42接雨水: hard
+         - 暴力破解：从左往右遍历每个柱子(第一个O(n))，对于每个柱子，找到他左边最高的柱子，l和右边最高的柱子r。这样当前柱子接雨水的量为min(l, r) - cur。在找左右最高的时候又经历了一个O(n)，所以算法复杂度为O(![](https://cdn.nlark.com/yuque/__latex/b67c3aca1bcc34aec861fef4fbf09535.svg#card=math&code=n%5E2&id=lmO5K))。超时
+         - 单调栈：维护一个单调递减栈，用于存储还没有计算能存储多少雨水的柱子。当新的柱子高度小于栈顶的时候或者栈为空的时候，直接入栈。否则弹出栈顶元素cur，然后比较取柱子高度height[i]和新的栈顶柱子高度height[stack[-1]]的较小值，减去height[cur]的高度就是cur这次存储雨水的高度。然后用i减去stack[-1]再减一就是存储雨水的宽度。高度乘以宽度就是cur柱子存储雨水的量。累加到result里面即可，整体算法复杂度为![](https://cdn.nlark.com/yuque/__latex/e65a67ac353abeeff44c359310d05c02.svg#card=math&code=O%28n%29&id=O2ftM)。AC
+```python
+class Solution:
+    """
+    这个题要注意是先出栈，然后
+    """
+    def trap(self, height: List[int]) -> int:
+        result = 0
+        stack = []
+        for i in range(len(height)):
+            while len(stack) > 0 and height[i] > height[stack[-1]]:
+                cur = stack[-1]
+                stack = stack[:-1]
+                if len(stack) == 0:
+                    break
+                result += (min(height[stack[-1]], height[i]) - height[cur]) * (i - stack[-1] - 1)
+            stack.append(i)
+        return result
+```
+
+      - 84柱状图中最大的矩形hard
+         - 暴力破解：从左往右遍历所柱形，对于每个柱子，往左和往右找到不小于该柱子高度的左右边界l和r，然后(r - l) * height[i]就是当前柱子能找到的最大矩形面积。算法复杂度是![](https://cdn.nlark.com/yuque/__latex/c120209360617f2e6d2db673c7053248.svg#card=math&code=O%28n%29%5E2&id=PnZuH)超时
+         - 单调栈：同暴力破解。对于每个柱子还是需要找到左右边界。但是使用一个单调递增栈存储还没有找到右边界的柱子。从左往右遍历所有柱子的时候，当单调栈为空或者当前柱子大于栈顶柱子的高度的时候直接入栈。否则弹出栈顶柱子h。计算以h为高度的矩形的最大面积。左边界就是弹出之后的栈顶柱子的索引，右边界就是此时的i，所以宽度为i - stack[-1] - 1, 高度为heights[h], 得到矩形面积后如果大于res则更新resAC
+```python
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        heights = [0] + heights + [0]
+        stack = []
+        res = 0
+        for i in range(len(heights)):
+            while len(stack) > 0 and heights[i] < heights[stack[-1]]:
+                # print(stack)
+                h = stack.pop()
+                res = max(heights[h] * (i - stack[-1] - 1), res)
+            stack.append(i)
+        return res
+```
+
+      - 496. 下一个更大元素 Ieasy
+         - 暴力破解：直接两个循环找到num2的下一个更大元素列表。复杂度![](https://cdn.nlark.com/yuque/__latex/f2d5f588234eb61a559ff90c41511b85.svg#card=math&code=O%28n%5E2%29&id=d3jvn)
+         - 单调递减栈：维护一个单调递减栈，用于记录还没有找到下一个更大元素的数。当有元素大于栈顶元素，更新栈顶元素的下一个更大元素位置数组。AC
+```python
+class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        nextBig = [-1] * len(nums2)
+        stack = []
+        for i in range(len(nums2)):
+            while len(stack) > 0 and nums2[i] > nums2[stack[-1]]:
+                nextBig[stack[-1]] = nums2[i]
+                stack.pop()
+            stack.append(i)
+        result = [nextBig[nums2.index(x)] for x in nums1 ]
+        return result
+```
+
+- [x] 下午：~~整理面试的相关资料~~未完成
+- [x] 晚上：开始做实验，基础对抗性评估。从准备数据集和目标模型开始准备部分完成
+      - 准备好KDD_feature_extractor工具
+      - 准备好CICFlowMeter工具用于提取特征
+
+- 6月22日工作计划
+- [x] 上午：找到CICFlowMeter工具的bug并修复完成
+      - ./gradlew distZip官方给的代码之后需要修改生成build文件中的cfm脚本
+```python
+DEFAULT_JVM_OPTS='"-Djava.library.path=/home/sunhanwu/tools/CICFlowMeter/jnetpcap/linux/jnetpcap-1.4.r1425/"'
+```
+
+- [ ] 下午：刷题5-10道华为完成
+      - 15[三数之和](https://leetcode-cn.com/problems/3sum)华为medium
+         - 暴力破解：首先需要给nums排序，用python内置的排序函数，复杂度在![](https://cdn.nlark.com/yuque/__latex/87ca12656f09824e20f4d5cf4c7d126a.svg#card=math&code=O%28log%28n%29%29&id=eOd0d)。然后从左往右遍历nums，对于nums[i], 如果大于0,直接返回。l=i+1，r=n-1,如果nums[i] + nums[l] + nums[r] == 0, 加入到结果列表中，并l ++, r--.(注意结果的去重，可以将列表字符串化进行去重)。如果nums[i] + nums[l] + nums[r]  > 0, r--; 否则 l++AC
+      - [554砖墙](https://leetcode-cn.com/problems/brick-wall) 华为medium
+         - 暴力破解：转换一下思路，找穿过砖块最少的线相当于找空隙最多的线。所以找里面空隙最多的地方划线即可。所以遍历整个wall，找到每行的空隙。然后将空隙出现的次数存储在字典中。最后找到空隙最多的那个。如果字典中没有值的话直接返回len(wall), 否则返回len(wall)减去最多的空隙的个数AC
+      -  medium
+         - 暴力破解：首先按照每个区间的左边界为key对所有区间进行排序。然后循环遍历所有区间。比较当前区间的左边界和上一个区间的右边界。如果当前区间的左边界大于上一个区间的右边界，则不用合并，直接加入到区间中。如果当前区间的左边界小于等于上一个区间的右边界，则需要合并当前区间和上一个区间。注意合并后的区间左边界肯定是上一个区间的左边界，但是右边界是当前区间的右边界和上一个区间的右边界的较大值(需要用max函数取一下较大值)。AC
+      - [53最大子序和](https://leetcode-cn.com/problems/maximum-subarray)华为easy
+         - 贪心解法：初始化res为空列表。遍历数组，如果res的和小于0，则清空res，每次遍历都将nums[i]加入到res中。然后在对比maxNum是否有变化，如果最大值变化了就更新。需要注意的是res只是为了方便理解。实际操作的时候世界用个变量累计和就可以。不然的话sum求和的话会导致复杂度升级为![](https://cdn.nlark.com/yuque/__latex/f2d5f588234eb61a559ff90c41511b85.svg#card=math&code=O%28n%5E2%29&id=zldIr)AC
+      - [20有效的括号](https://leetcode-cn.com/problems/valid-parentheses)华为easy
+         - 简单的使用栈进行匹配AC
+- [x] 晚上：开始准备跑实验，处理MTA，CIC的三个数据集的数据为KDD特征集和CICFlowMeter特征集，注意打标签未完成
+      - kdd_features:
+- [x] baseline: KDD99
+- [x] MTA
+- [x] CIC
+- [x] CTU
+      - cicflowmeter_features:
+- [x] MTA
+- [x] CIC
+- [x] CTU
+> 算法题大概完成了5道，但是基本每道题都是查看了解答的。虽然也学到了不少的东西。感觉是目前还是题目刷少了，很多东西想不过来。另外实验部分感觉效率太低。一晚上没有写完一个特征提取模块。
+>
+
+
+---
+
+- 6月23日
+- [x] 下午：算法题未完成
+      - [5最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring)华为medium
+         -  暴力解法: 首先外部两层循环用于确定子串的左右边界。再一层循环用于判断子串是否是回文串。算法复杂度为![](https://cdn.nlark.com/yuque/__latex/a77815a52a2d0050828079fb142b1410.svg#card=math&code=O%28n%5E3%29&id=VKw30)超时(1000个用例长度一般要求复杂度在![](https://cdn.nlark.com/yuque/__latex/f2d5f588234eb61a559ff90c41511b85.svg#card=math&code=O%28n%5E2%29&id=j3Zdy)）其实如果用java或者c写的话暴力应该能过。
+         - 动态规划：还没有成功实现。部分完成
+      - <br />
+      - <br />
+- [x] 晚上：~~实验部分~~未完成
+- [x] options：~~看一篇论文，或者看几个算法视频~~
+> 总结：下午开始做最长回文子串，但是目前没有AC，DP的转态转移方程大概能够理解，但是有些细节问题没有想清楚，导致一直有测试样例没有通过。下午帮帮解决了Pcap++和tstat的问题，发现tstat也提供了一个不错的特征集。另外第一次知道了flowcontainer，有空的话可以仔细了解一下。但是目前的重点还是刷题，学位论文的实验暂缓一下。
+
+
+---
+
+- 6月24日
+- [x] 上下午：继续刷算法题(动态规划专题)标签
+      - [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring)华为medium
+         - 动态规划：看s[i:j]是否是回文字符串，如果s[i] == s[j] 并且s[i+1:j-1]也是回文字符串的话，s[i:j]就是回文字符串。所有单个字符都是回文字符串，两个一样的字符串也是回文字符串。这样三个以上字符串就可以从简单的较短的字符串推导而来。算法复杂度为O(n)。注意状态转移的时候要先计算长度短的回文字符串，所以循环遍历的时候要遍历长度。而不是回文字符串的左右边界。AC
+      - [227. 基本计算器 II](https://leetcode-cn.com/problems/basic-calculator-ii)华为medium
+         - 使用栈：O(n)一个循环，注意+直接入栈，-将对应的数字的相反数入栈，乘除法需要取出栈顶的元素进行乘除操作之后再入栈。另外注意python中-3//2 = -2，整除去向下取整的。AC
+      - [316. 去除重复字母](https://leetcode-cn.com/problems/remove-duplicate-letters)华为medium
+         - 单调栈：设置一个升序单调栈，当有字符不满足升序的时候。如果后面的字符串中还有栈顶字符，就弹出栈顶。知道栈顶没有出现在后续字符中就压入当前字符入栈。AC
+      - [735. 行星碰撞](https://leetcode-cn.com/problems/asteroid-collision)华为medium
+         - 栈：逻辑判断稍微有点多，需要仔细判断AC
+      - [54. 螺旋矩阵](https://leetcode-cn.com/problems/spiral-matrix)华为medium
+         - 直接暴力的方法。O(mn)AC
+      - [剑指 Offer 10- II. 青蛙跳台](https://leetcode-cn.com/problems/qing-wa-tiao-tai-jie-wen-ti-lcof)华为easy
+         - 动态规划，简单题AC
+      - [820. 单词的压缩编码](https://leetcode-cn.com/problems/short-encoding-of-words)
+         - 暴力解法：第一层循环用来遍历单词，里面再有一层循环用来检查之后是否有更合适的单词AC
+      - [46. 全排列](https://leetcode-cn.com/problems/permutations)华为medium
+         - 使用递归，一遍过AC
+      - [1004. 最大连续1的个数 III](https://leetcode-cn.com/problems/max-consecutive-ones-iii)
+         - 暴力破解：理论上的算法复杂度在O(nk!)，并且比较难实现。没有具体去实现
+         - 滑动窗口：抓住一个条件就是滑动窗口内的0不允许超过k个，一旦超过就减小窗口。这样的算法复杂度在O(n)AC
+      - [21. 合并两个有序链表](https://leetcode-cn.com/problems/merge-two-sorted-lists)
+         - 直接O(m+n)暴力求解
+- [x] 晚上：做实验未完成
+      - 简单的整理了一些数据集和特征集
+:::info
+PS：刷算法题的时候，写完之后除了测试题目提供的几个测试样例，自己也要多测试几个测试样例
+:::
+
+---
+
+- 6月25日
+- [x] 上午：算法题标签
+      - [994. 腐烂的橘子](https://leetcode-cn.com/problems/rotting-oranges)华为medium
+         - 直接暴力破解：AC
+      - [93. 复原IP地址](https://leetcode-cn.com/problems/restore-ip-addresses) 华为medium
+         - 动态规划：注意出口条件，需要注意加一个控制分割点的参数kAC
+      - [315. 计算右侧小于当前元](https://leetcode-cn.com/problems/count-of-smaller-numbers-after-self)未完成
+         - 暴力解法：![](https://cdn.nlark.com/yuque/__latex/f2d5f588234eb61a559ff90c41511b85.svg#card=math&code=O%28n%5E2%29&id=Z7Wbm)超时
+      - [剑指Offer51：数组中的逆序对](https://leetcode.cn/problems/shu-zu-zhong-de-ni-xu-dui-lcof/)未完成
+         - <br />
+      - dasjk
+- [x] 下午：~~算法题~~未完成
+- [x] 晚上：~~实验~~未完成
+> 腐烂的桔子类似之前螺旋找数一样，没有太深的技巧。然后复原IP地址类似之前的全排列，用递归做，但是注意出口条件就可以了。另外变天大部分时间都没啥效率，在等论文结果。
+
+
+---
+
+- 6月26日
+
+- [x] 下午：~~整理简历~~未完成
+      - [<br />](https://www.yuque.com/sunhanwu/cwfdgn/yr4wro#nRw73)
+- [x] 晚上：~~继续整理简历，有空余时间把周六没有完成的两道题做完~~未完成
+> 摆烂的一天
+
+
+---
+
+- 6月27日
+- [x] 上午10点：完善yuque-todo这个项目滴答
+      - [https://github.com/sunhanwu/yuque-todo](https://github.com/sunhanwu/yuque-todo)
+- [x] 下午2点：leetcode刷题滴答
+      - [451. 根据字符出现频率排序](https://leetcode-cn.com/problems/sort-characters-by-frequency)华为medium
+         - 暴力解法：首先用一个字段存储每个字符出现的个数，然后按照出现次数进行排序。注意最后要根据每个字符出现的次数重复几遍。
+      - [剑指Offer51：数组中的逆序对](https://leetcode.cn/problems/shu-zu-zhong-de-ni-xu-dui-lcof/)华为hard
+         - 暴力解法：两个for循环，算法复杂度![](https://cdn.nlark.com/yuque/__latex/f2d5f588234eb61a559ff90c41511b85.svg#card=math&code=O%28n%5E2%29&id=iC3QQ)超时
+         - 归并排序：在归并的时候统计逆序对的个数。例如left_list[i] > right[j], 那么left_list中从i之后的所有都大于right_list[j], 逆序对的个数+len(left_list) - i个AC
+      - [315. 计算右侧小于当前元](https://leetcode-cn.com/problems/count-of-smaller-numbers-after-self)华为hard
+         - 暴力破解：两重循环，![](https://cdn.nlark.com/yuque/__latex/f2d5f588234eb61a559ff90c41511b85.svg#card=math&code=O%28n%5E2%29&id=M5Szq)复杂度超时
+         - 归并排序：使用归并排序，计算在归并的时候计算每个元素右边小于当前元素的个数。注意要保存一个index用于记录AC
+- [x] 下午：完成个人简历中英文版本滴答未完成
+- [x] 下午3点到5点：test滴答
+- [x] 晚上：开始考虑投递个人简历滴答标签
+      - 没有开始，简单准备了几个简历模板，但是还没有认真写简历
+- [x] 晚上11点：完善yuque-todo，增加hash桶，防止重复添加滴答
+      - 由于晚上翻墙服务器出问题，导致一直没有工作
+> 初步确定找安全算法方向的工作(类似风控，云安全算法这种)，就硬卷
+
+
+---
+
+- 6月28日
+- [x] 中午12点前：完成yuque-todo的bug修复滴答
+- [x] 下午1点20：出发去中心那边开会滴答
+- [x] 晚上：leetcode刷题滴答
+
+
+
+
+<a name="XikjS"></a>
+### todo:
+
+- [ ] 把个人博客给搭建起来，哪怕需要备案，方便做简历
+- [ ] 抽空是几个工作找的不错的师兄们聊聊找工作的事情
+- [ ] 7月之前如果论文中了的话抽一天时间把简历做了
+- [ ] flowcontainer使用
+- [ ] tstat使用
+
