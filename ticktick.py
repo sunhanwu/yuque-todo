@@ -38,7 +38,6 @@ def check(token):
         print("check error!")
     todoList = json.loads(response.text)
     todoList = todoList["syncTaskBean"]["update"]
-    print(todoList)
     return todoList
 
 
