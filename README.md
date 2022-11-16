@@ -103,5 +103,5 @@ python app.py --fromAddr=xxx@qq.com --password=xxx --didaAddr=xxx
 
 + [ ] webhook接口无认证机制
 + [ ] 完善log输出
-+ futrue
++ future
 + [ ] 支持语雀文档自动同步到Github Pages作为个人博客

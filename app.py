@@ -26,4 +26,4 @@ def getTodo():
 if __name__ == '__main__':
     args = parse_arguments()
     hashBucket = loadHashBucket()
-    app.run(host="0.0.0.0", port=args.port)
+    app.run(host="0.0.0.0", port=args.port, debug=True)
