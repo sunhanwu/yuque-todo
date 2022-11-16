@@ -18,6 +18,8 @@ def parse_arguments():
     parser.add_argument('--didaAddr', required=True, type=str, help="dida address")
     parser.add_argument('--smtpServer', required=False, type=str, default="smtp.qq.com", help="smtp server host")
     parser.add_argument('--smtpPort', required=False, type=int, default=465, help="smtp server port")
+    parser.add_argument('--dida_username', requeired=False, type=str, help="dida username")
+    parser.add_argument('--dida_password', requeired=False, type=str, help="dida password")
     return parser.parse_args()
 
 
