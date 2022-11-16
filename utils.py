@@ -18,8 +18,8 @@ def parse_arguments():
     parser.add_argument('--didaAddr', required=True, type=str, help="dida address")
     parser.add_argument('--smtpServer', required=False, type=str, default="smtp.qq.com", help="smtp server host")
     parser.add_argument('--smtpPort', required=False, type=int, default=465, help="smtp server port")
-    parser.add_argument('--dida_username', requeired=False, type=str, help="dida username")
-    parser.add_argument('--dida_password', requeired=False, type=str, help="dida password")
+    parser.add_argument('--didaUsername', required=False, type=str, help="dida username")
+    parser.add_argument('--didaPassword', required=False, type=str, help="dida password")
     return parser.parse_args()
 
 
@@ -82,4 +82,6 @@ def md5hash(s:str)->str:
     md5.update(s.encode("utf8"))
     return md5.hexdigest()
 
+def sendWechatMessage(message):
+    print("Wechat Alert {}".format(message))
 

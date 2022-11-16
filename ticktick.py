@@ -38,14 +38,15 @@ def check(token):
         print("check error!")
     todoList = json.loads(response.text)
     todoList = todoList["syncTaskBean"]["update"]
-    return todoList
-
-
-
+    result = []
+    for item in todoList:
+        result.append([item['title'], item['startDate']])
+    return result
 
 
 
 
 
 if __name__ == "__main__":
-    pass
+    token = login("1965190613@qq.com", "Ydm186919")
+    check(token)
