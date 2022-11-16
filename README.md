@@ -98,10 +98,13 @@ python app.py --fromAddr=xxx@qq.com --password=xxx --didaAddr=xxx
 
 + bugs fix
 + [x] 待办事项重复添加
++ [ ] 微信提醒重复
 + function
 + [ ] webhook接口无认证机制
 + [ ] 支持更加灵活的待办事项语法
 + [ ] 支持统计汇总功能
 + [ ] 完善log输出
 + future
-+ [ ] 支持语雀文档自动同步到Github Pages作为个人博客
++ [ ] 支持语雀文档自动同步到Halo作为个人博客
++ [ ] 支持Docker部署
++ [ ] 支持yuqu-todo与WeChatBot一起部署
