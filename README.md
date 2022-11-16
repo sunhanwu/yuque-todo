@@ -7,7 +7,7 @@
 
 
 ## framework
-![](https://cdn.nlark.com/yuque/0/2022/jpeg/671301/1656297091594-93db4352-1a4f-43db-817d-8529c484efc5.jpeg)
+![](https://ipic-picgo.oss-cn-beijing.aliyuncs.com/20221117010937.png)
 ## setup
 ### 1. 部署yuque-todo机器人
 
